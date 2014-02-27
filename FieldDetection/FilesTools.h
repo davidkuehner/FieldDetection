@@ -16,18 +16,30 @@ class FilesTools
 public:
 	FilesTools(void);
 	~FilesTools(void);
-
-	static Mat getImage(string path);
+	
+	/// <summary>
+	/// <param name='path'>Ex : "..\\images\\sources\\testSomeFilter"</param>
+	/// <para>Default path : "..\\images\\sources"</para>
+	/// </summary>
 	static vector<Mat> getImages(string path = SOURCE_PATH);
-	static void showImages(vector<Mat> images);
-	static void saveImage(Mat image, string path);
+	/// <summary> 
+	/// <param name='path'>Ex : "..\\images\\output\\testSomeFilter"</param>
+	/// <para>Default path : "..\\images\\output"</para>
+	/// <para>Attention : output folder MUST exist</para>
+	/// </summary>
 	static void saveImages(vector<Mat> images, string path = OUTPUT_PATH);
+	static void showImage(Mat image, string title = TITLE);
+	static void showImages(vector<Mat> images, string title = TITLE);
+
+private:
+	static Mat getImage(string path);
+	static void saveImage(Mat image, string path);
+	static string wchar_t2string(const wchar_t *wchar);
+	static wchar_t* string2wchar_t(const string &str);
 
 	static string SOURCE_PATH;
 	static string OUTPUT_PATH;
+	static string TITLE;
 
-private:
-	static string wchar_t2string(const wchar_t *wchar);
-	static wchar_t* string2wchar_t(const string &str);
 };
 
