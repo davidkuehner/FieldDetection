@@ -3,6 +3,7 @@
 
 string FilesTools::SOURCE_PATH = "..\\images\\sources";
 string FilesTools::OUTPUT_PATH = "..\\images\\output";
+string FilesTools::TITLE = "output image";
 
 FilesTools::FilesTools(void)
 {
@@ -43,6 +44,11 @@ vector<Mat> FilesTools::getImages(string path)
 	}
 
 	return images;
+}
+
+void FilesTools::showImage(Mat image, string title)
+{
+	imshow(title, image);
 }
 
 void FilesTools::showImages(vector<Mat> images)
