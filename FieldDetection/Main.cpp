@@ -18,7 +18,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<Mat> images = FilesTools::getImages();
 	FilesTools::showImages(images);
 
-	FilesTools::saveImages(images);
+	//FilesTools::saveImages(images);
 
 	waitKey();
 	return 0;
