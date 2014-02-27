@@ -45,6 +45,23 @@ vector<Mat> FilesTools::getImages(string path)
 	return images;
 }
 
+void FilesTools::showImages(vector<Mat> images)
+{
+	for (unsigned int i = 0; i < images.size(); i ++)
+		imshow(to_string(i), images[i]);
+}
+
+void FilesTools::saveImage(Mat image, string path)
+{
+	imwrite(path, image);
+}
+
+void FilesTools::saveImages(vector<Mat> images, string path)
+{
+	for(unsigned int i = 0; i < images.size(); i ++)
+		saveImage(images[i], path + "\\" + to_string(i) + ".jpg");
+}
+
 string FilesTools::wchar_t2string(const wchar_t *wchar)
 {
     string str = "";

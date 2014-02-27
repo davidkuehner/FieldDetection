@@ -19,6 +19,9 @@ public:
 
 	static Mat getImage(string path);
 	static vector<Mat> getImages(string path = SOURCE_PATH);
+	static void showImages(vector<Mat> images);
+	static void saveImage(Mat image, string path);
+	static void saveImages(vector<Mat> images, string path = OUTPUT_PATH);
 
 	static string SOURCE_PATH;
 	static string OUTPUT_PATH;
