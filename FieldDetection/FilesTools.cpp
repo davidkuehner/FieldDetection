@@ -3,7 +3,7 @@
 
 string FilesTools::SOURCE_PATH = "..\\images\\sources";
 string FilesTools::OUTPUT_PATH = "..\\images\\output";
-string FilesTools::TITLE = "output image";
+string FilesTools::TITLE = "output";
 
 FilesTools::FilesTools(void)
 {
@@ -51,10 +51,10 @@ void FilesTools::showImage(Mat image, string title)
 	imshow(title, image);
 }
 
-void FilesTools::showImages(vector<Mat> images)
+void FilesTools::showImages(vector<Mat> images, string title)
 {
 	for (unsigned int i = 0; i < images.size(); i ++)
-		imshow(to_string(i), images[i]);
+		imshow(title + " " + to_string(i), images[i]);
 }
 
 void FilesTools::saveImage(Mat image, string path)

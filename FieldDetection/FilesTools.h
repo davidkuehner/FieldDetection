@@ -29,7 +29,7 @@ public:
 	/// </summary>
 	static void saveImages(vector<Mat> images, string path = OUTPUT_PATH);
 	static void showImage(Mat image, string title = TITLE);
-	static void showImages(vector<Mat> images);
+	static void showImages(vector<Mat> images, string title = TITLE);
 
 private:
 	static Mat getImage(string path);
