@@ -14,30 +14,91 @@ FilterTools::~FilterTools(void)
 
 Mat FilterTools::toGray(Mat source)
 {
-	return source;
+	Mat result = source.clone();
+	cvtColor( source, result, CV_RGB2GRAY);
+	
+	return result;
+}
+
+vector<Mat> FilterTools::toGray(vector<Mat> images)
+{
+	vector<Mat> results;
+	for (unsigned int i = 0; i < images.size(); i ++)
+		results.push_back(toGray(images[i]));
+
+	return results;
+}
+
+/// <summary>
+/// Order 
+///</summary>
+vector<Mat> FilterTools::getBGR(Mat source)
+{
+	vector<Mat> channels(3);
+	split(source, channels);
+
+	return channels;
 }
 
 Mat FilterTools::getRed(Mat source)
 {
-	return source;
+	vector<Mat> channels = getBGR(source);
+	return channels[2];
+}
+
+vector<Mat> FilterTools::getRed(vector<Mat> images)
+{
+	vector<Mat> results;
+	for (unsigned int i = 0; i < images.size(); i ++)
+		results.push_back(getRed(images[i]));
+
+	return results;
 }
 
 Mat FilterTools::getGreen(Mat source)
 {
-	return source;
+	vector<Mat> channels = getBGR(source);
+	return channels[1];
+}
+
+vector<Mat> FilterTools::getGreen(vector<Mat> images)
+{
+	vector<Mat> results;
+	for (unsigned int i = 0; i < images.size(); i ++)
+		results.push_back(getGreen(images[i]));
+
+	return results;
 }
 
 Mat FilterTools::getBlue(Mat source)
 {
+	vector<Mat> channels = getBGR(source);
+	return channels[0];
+}
+
+vector<Mat> FilterTools::getBlue(vector<Mat> images)
+{
+	vector<Mat> results;
+	for (unsigned int i = 0; i < images.size(); i ++)
+		results.push_back(getBlue(images[i]));
+
+	return results;
+}
+
+Mat FilterTools::resize(Mat source, int w, int h)
+{
+	// TODO @DKU
+	//Mat result(h,w, DataType<float>::type);
+	//cvResize(source,result);
 	return source;
 }
 
-Mat FilterTools::resize(Mat source, int x, int y)
+vector<Mat> FilterTools::resize(vector<Mat> images, int w, int h)
 {
-	return source;
+	vector<Mat> results;
+	for (unsigned int i = 0; i < images.size(); i ++)
+		results.push_back(resize(images[i], w, h));
+
+	return results;
 }
 
-Mat FilterTools::applyNothing(Mat source)
-{
-	return source;
-}
