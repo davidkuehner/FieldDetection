@@ -16,10 +16,11 @@ public:
 
 	Mat getImageInput() {return imageInput;}
 	Mat getImageOutput() {return imageOutput;}
-	int getCurrentRegion() {return currentRegion;}
+	int getZoneCounter() {return zoneCounter;}
 	vector<Texel> getTexels() {return texels;}
 	int getTexelSize() {return texelSize;}
 	double getDeltaChi2() {return deltaChi2;}
+	void incrementZoneCounter();
 
 private:
 
@@ -31,7 +32,11 @@ private:
 	double deltaChi2;
 
 	Mat imageOutput;
-	int currentRegion;
+	int zoneCounter;
 	vector<Texel> texels;
+
+	// tools
+	int nbTexelRow;
+	int nbTexelCol;
 };
 
