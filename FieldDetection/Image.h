@@ -15,16 +15,21 @@ public:
 	~Image(void);
 
 	Mat getImageInput() {return imageInput;}
-	Mat getImageOutput() {return imageOutput;}
+	// hypothese : imageInput width % texelSize = 0
+	Mat getImageOutput();
 	int getZoneCounter() {return zoneCounter;}
 	vector<Texel> getTexels() {return texels;}
 	int getTexelSize() {return texelSize;}
 	double getDeltaChi2() {return deltaChi2;}
-	void incrementZoneCounter();
+	void incrementZoneCounter();	
 
 private:
 
 	void initTexels();
+	int getHue(int zone);
+
+	// tmp : until initTexels is working
+	void initTexelsTest();
 
 	// input
 	Mat imageInput;
