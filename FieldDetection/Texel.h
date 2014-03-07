@@ -1,7 +1,5 @@
 #pragma once
 
-#define NB_GRAY 256
-
 class Texel
 {
 private:
@@ -10,6 +8,7 @@ private:
 	int height;
 	int zoneId;
 	int* histogram;
+	const static int NB_GRAY = 256;
 
 	void initHistogram();
 

@@ -1,15 +1,14 @@
 #include "stdafx.h"
 #include "Texel.h"
 
-
 Texel::Texel(int id, int size)
 {
 	this->id = id;
 	this->width = size;
 	this->height = size;
 	this->zoneId = -1;
-	this->histogram = new int[NB_GRAY];
-	initHistogram();
+	//histogram = new int[NB_GRAY];
+	//initHistogram();
 }
 
 Texel::~Texel(void)
