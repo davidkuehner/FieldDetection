@@ -12,8 +12,8 @@ Image::Image(Mat imageInput, int texelSize, double deltaChi2)
 	this->nbTexelCol = (int)( std::floor(s.width / texelSize));
 	zoneCounter = 0;
 
-	//initTexels();
-	initTexelsTest();
+	initTexels();
+	//initTexelsTest();
 }
 
 Image::~Image(void)
@@ -22,11 +22,37 @@ Image::~Image(void)
 
 void Image::initTexels()
 {
+	Mat imageSubstitute = imageInput.clone();
+	cvtColor(imageSubstitute, imageSubstitute, COLOR_RGB2GRAY);
+
+	int id = 0;
 	for( int row = 0 ; row < nbTexelRow ; ++row )
 	{
 		for( int col = 0 ; col < nbTexelCol ; ++col)
 		{
-			// TODO
+			Texel tex(id,texelSize);
+			++id;
+
+			Mat subImgTemp(imageSubstitute, cv::Rect(col, row, texelSize, texelSize));
+			Mat1b subImg;
+
+			// Set histogram bins count
+			int bins = 256;
+			int histSize[] = {bins};
+			// Set ranges for histogram bins
+			float lranges[] = {0, 256};
+			const float* ranges[] = {lranges};
+			// create matrix for histogram
+			cv::Mat histogram;
+			int channels[] = {0};
+
+			int const hist_height = 256;
+			cv::Mat3b hist_image = cv::Mat3b::zeros(hist_height, bins);
+
+			cv::calcHist(&subImg, 1, channels, cv::Mat(), histogram, 1, histSize, ranges, true, false);
+
+			tex.setHistogram(histogram);
+			texels.push_back(tex);
 		}
 	}
 }
