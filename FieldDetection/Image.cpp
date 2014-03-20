@@ -35,7 +35,7 @@ void Image::initTexels()
 			++id;
 
 			//Mat subImgTemp(imageSubstitute, cv::Rect(col, row, texelSize, texelSize));
-			Mat1b subImg(imageSubstitute, cv::Rect(col, row, texelSize, texelSize));
+			Mat1b subImg(imageSubstitute, cv::Rect(col*texelSize, row*texelSize, texelSize, texelSize));
 
 			// Set histogram bins count
 			int bins = 256;
