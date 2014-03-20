@@ -1,4 +1,6 @@
 #pragma once
+#include "opencv2\opencv.hpp"
+
 
 #define NB_GRAY 256
 
@@ -9,9 +11,7 @@ private:
 	int width;
 	int height;
 	int zoneId;
-	int* histogram;
-
-	void initHistogram();
+	cv::MatND histogram;
 
 public:
 	Texel(int id, int size);
@@ -30,7 +30,7 @@ public:
 	void setZoneId(int zoneId);
 	int getZoneId();
 
-	void setHistogram(int* histogram);
-	int* getHistogram();
+	void setHistogram(cv::MatND histogram);
+	cv::MatND getHistogram();
 };
 

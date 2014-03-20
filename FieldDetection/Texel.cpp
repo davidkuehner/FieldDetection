@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Texel.h"
 
+using namespace cv;
 
 Texel::Texel(int id, int size)
 {
@@ -8,26 +9,13 @@ Texel::Texel(int id, int size)
 	this->width = size;
 	this->height = size;
 	this->zoneId = -1;
-	this->histogram = new int[NB_GRAY];
-	initHistogram();
+	this->histogram = NULL;
 }
 
 Texel::~Texel(void)
 {
-	delete[] this->histogram;
+	// nothig
 }
-
-
-// Private method
-
-void Texel::initHistogram()
-{
-	for( int i = 0 ; i < NB_GRAY ; ++i )
-	{
-		this->histogram[i] = 0;
-	}
-}
-
 
 //Getters and Setters
 
@@ -71,11 +59,11 @@ int Texel::getZoneId()
 	return this->zoneId;
 }
 
-void Texel::setHistogram(int* histogram)
+void Texel::setHistogram(cv::MatND histogram)
 {
 	this->histogram = histogram;
 }
-int* Texel::getHistogram()
+cv::MatND Texel::getHistogram()
 {
 	return this->histogram;
 }
