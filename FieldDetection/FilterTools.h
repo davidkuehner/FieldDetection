@@ -2,7 +2,6 @@
 
 #include "opencv2\opencv.hpp"
 #include <list>
-#include "Image.h"
 #include "Texel.h"
 
 using namespace cv;
@@ -31,12 +30,9 @@ public:
 	static Mat resize(Mat source, int w, int h);
 	static vector<Mat> resize(vector<Mat> images, int w, int h);
 
-	static Image associateZone(Image image);
 	static Mat trimImageForTexelSize(Mat source, int texelSize);
-	static double chi2(Texel t);
+	static double compareChi2(Texel t1, Texel t2);
 
 	static bool isEqual(double a, double b, double epsilon);
-
-	static const double CHI2_EPSILON;
 };
 

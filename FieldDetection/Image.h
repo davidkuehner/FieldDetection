@@ -3,10 +3,13 @@
 #include "stdafx.h"
 #include "opencv2\opencv.hpp"
 #include "Texel.h"
+#include "FilterTools.h"
+#include <iostream>
 
 #pragma once
 
 using namespace cv;
+using namespace std;
 
 class Image
 {
@@ -22,6 +25,7 @@ public:
 	int getTexelSize() {return texelSize;}
 	double getDeltaChi2() {return deltaChi2;}
 	void incrementZoneCounter();	
+	void associateZone();
 
 private:
 

@@ -13,6 +13,7 @@ Image::Image(Mat imageInput, int texelSize, double deltaChi2)
 	zoneCounter = 0;
 
 	initTexels();
+	associateZone();
 	//initTexelsTest();
 }
 
@@ -33,8 +34,8 @@ void Image::initTexels()
 			Texel tex(id,texelSize);
 			++id;
 
-			Mat subImgTemp(imageSubstitute, cv::Rect(col, row, texelSize, texelSize));
-			Mat1b subImg;
+			//Mat subImgTemp(imageSubstitute, cv::Rect(col, row, texelSize, texelSize));
+			Mat1b subImg(imageSubstitute, cv::Rect(col, row, texelSize, texelSize));
 
 			// Set histogram bins count
 			int bins = 256;
@@ -50,6 +51,15 @@ void Image::initTexels()
 			cv::Mat3b hist_image = cv::Mat3b::zeros(hist_height, bins);
 
 			cv::calcHist(&subImg, 1, channels, cv::Mat(), histogram, 1, histSize, ranges, true, false);
+
+			//cout << "initTexels" << endl;
+			//for (int i=0; i<256; i++)
+			//{
+			//	cout << histogram.at<float>(i);
+			//	// do stuff
+			//}
+
+			normalize( histogram, histogram, 0, 1, NORM_MINMAX, -1, Mat() );
 
 			tex.setHistogram(histogram);
 			texels.push_back(tex);
@@ -92,6 +102,66 @@ void Image::initTexelsTest()
 	texels.push_back(t15);
 
 	zoneCounter = 4;
+}
+
+void Image::associateZone()
+{	
+	int nbTexels = 100;
+	int nbTexelsAssociatedToZones = 0;
+
+	int texelIndex = 0;
+	//Run trough each texel
+	for (unsigned int i = 0; i < texels.size(); i++) 
+	{
+		texelIndex++;
+		//If all Texel associated to a zone --> Break loop
+		if(nbTexelsAssociatedToZones >= nbTexels)
+			break;
+
+		//Getting the current Texel
+		Texel& currentTexel = texels.at(i);	
+
+		//If the current Texel is already associated to a zone --> Jump to next Texel
+		if(currentTexel.getZoneId() >= 0)
+			continue;
+
+		//Attribute a new zone to the current texel
+		cout << "zone counter " << getZoneCounter() << endl;
+		currentTexel.setZoneId(getZoneCounter());
+		cout << "getZoneId " << currentTexel.getZoneId() << endl;
+		incrementZoneCounter();
+		nbTexelsAssociatedToZones++;
+
+		//Run trought all Texel after the current Texel (to compare them)
+		for (unsigned int j = i + 1; j < texels.size(); j ++) 
+		{
+			//If all Texel associated to a zone --> Break loop
+			if(nbTexelsAssociatedToZones >= nbTexels)
+				break;
+
+			//Getting the current Texel to compare with
+			Texel& comparisonTexel = texels.at(j);
+
+			//If this texel is already associtated to a zone --> Jump to next Texel to compare with
+			if(comparisonTexel.getZoneId() >= 0)
+				continue;
+
+			//Compare the chi2 of those texels
+			if (FilterTools::compareChi2(comparisonTexel, currentTexel) <= getDeltaChi2())
+			{
+				comparisonTexel.setZoneId(currentTexel.getZoneId()); 
+				nbTexelsAssociatedToZones++;
+			}
+
+
+
+			//if(isEqual(chi2(comparisonTexel), chi2(currentTexel), FilterTools::CHI2_EPSILON))
+			//{
+			//	comparisonTexel.setZoneId(currentTexel.getZoneId()); 
+			//	nbTexelsAssociatedToZones++;
+			//}
+		}
+	}
 }
 
 Mat Image::getImageOutput()
