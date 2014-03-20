@@ -1,9 +1,6 @@
 #pragma once
 #include "opencv2\opencv.hpp"
 
-
-#define NB_GRAY 256
-
 class Texel
 {
 private:
@@ -12,6 +9,7 @@ private:
 	int height;
 	int zoneId;
 	cv::MatND histogram;
+	const static int NB_GRAY = 256;
 
 public:
 	Texel(int id, int size);
