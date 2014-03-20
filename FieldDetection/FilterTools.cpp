@@ -2,6 +2,8 @@
 #include "FilterTools.h"
 
 
+const double FilterTools::CHI2_EPSILON = 1e-1;
+
 FilterTools::FilterTools(void)
 {
 }
@@ -102,3 +104,87 @@ vector<Mat> FilterTools::resize(vector<Mat> images, int w, int h)
 	return results;
 }
 
+Image FilterTools::associateZone(Image image)
+{
+	int nbTexels = 100;
+	int nbTexelsAssociatedToZones = 0;
+	list<Texel> texelList = list<Texel>();
+
+
+	int texelIndex = 0;
+	//Run trough each texel
+	std::list<Texel>::iterator currentTexelIterator;
+	for (currentTexelIterator = texelList.begin(); currentTexelIterator != texelList.end(); ++currentTexelIterator) 
+	{
+		texelIndex++;
+		//If all Texel associated to a zone --> Break loop
+		if(nbTexelsAssociatedToZones >= nbTexels)
+			break;
+
+		//Getting the current Texel
+		Texel currentTexel = *currentTexelIterator;
+
+		//If the current Texel is already associated to a zone --> Jump to next Texel
+		if(currentTexel.getZoneId() >= 0)
+			continue;
+
+		//Attribute a new zone to the current texel
+		currentTexel.setZoneId(image.getZoneCounter());
+		image.incrementZoneCounter();
+		nbTexelsAssociatedToZones++;
+
+
+
+		//Run trought all Texel after the current Texel (to compare them)
+		std::list<Texel>::iterator comparisonTexelIterator;
+		comparisonTexelIterator = texelList.begin();
+
+		//Start comparison only on currentTexel + 1
+		std::advance(comparisonTexelIterator,texelIndex);
+
+		for (comparisonTexelIterator ; comparisonTexelIterator != texelList.end(); ++comparisonTexelIterator) 
+		{
+			//If all Texel associated to a zone --> Break loop
+			if(nbTexelsAssociatedToZones >= nbTexels)
+				break;
+
+			//Getting the current Texel to compare with
+			Texel comparisonTexel = *comparisonTexelIterator;
+			
+			//If this texel is already associtated to a zone --> Jump to next Texel to compare with
+			if(comparisonTexel.getZoneId() >= 0)
+				continue;
+
+			//Compare the chi2 of those texels
+			if(isEqual(chi2(comparisonTexel), chi2(currentTexel), FilterTools::CHI2_EPSILON))
+			{
+				comparisonTexel.setZoneId(currentTexel.getZoneId()); 
+				nbTexelsAssociatedToZones++;
+			}
+		}
+	}
+	return image;
+}
+
+bool FilterTools::isEqual(double a, double b, double epsilon)
+{
+	return abs(a-b) <= epsilon;
+}
+
+Mat FilterTools::trimImageForTexelSize(Mat source, int texelSize)
+{
+	int height = source.rows;
+	int width = source.cols;
+	height = height - (height % texelSize);
+	width = width - (width % texelSize);
+	return source(Rect(0,0,width,height));
+}
+
+double FilterTools::chi2(Texel t)
+{
+	//TODO @ADM Realy calculate chi2
+	double fMax = 100;
+	double fMin = 0;
+	double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}

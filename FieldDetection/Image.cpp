@@ -10,7 +10,7 @@ Image::Image(Mat imageInput, int texelSize, double deltaChi2)
 	cv::Size s = this->imageInput.size();
 	this->nbTexelRow = (int)( std::floor(s.height / texelSize));
 	this->nbTexelCol = (int)( std::floor(s.width / texelSize));
-	zoneCounter = -1;
+	zoneCounter = 0;
 
 	//initTexels();
 	initTexelsTest();
@@ -103,4 +103,9 @@ Mat Image::getImageOutput()
 int Image::getHue(int zone)
 {
 	return (180 / zoneCounter) * zone;
+}
+
+void Image::incrementZoneCounter()
+{
+	zoneCounter++;
 }
