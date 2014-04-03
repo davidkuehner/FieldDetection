@@ -16,15 +16,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	Mat mat = FilesTools::getImages("..\\images\\sources\\zones")[0];	
 	FilesTools::showImage(mat);
 
-	Image image = Image(mat, 128, 0.01);
+	Image image = Image(mat, 16, 13.0);
 
 	cout << "zones " << image.getZoneCounter() << endl;
 
-	for (unsigned int i = 0; i < image.getTexels().size(); i ++)
-	{
-		cout << "t" << i << " " << image.getTexels()[i].getZoneId() << endl;
-	}
+	//for (unsigned int i = 0; i < image.getTexels().size(); i ++)
+	//{
+	//	cout << "t" << i << " " << image.getTexels()[i].getZoneId() << endl;
+	//}
 
+	Mat result = FilterTools::imageCombination(mat,image.getImageOutput(),0.5);
+	FilesTools::showImage(result);
 	FilesTools::showImage(image.getImageOutput(), "result");
 
 	//FilesTools::showImage(image.getImageOutput());

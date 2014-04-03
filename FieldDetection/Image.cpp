@@ -45,6 +45,7 @@ void Image::initTexels()
 			const float* ranges[] = {lranges};
 			// create matrix for histogram
 			cv::Mat histogram;
+
 			int channels[] = {0};
 
 			int const hist_height = 256;
@@ -106,7 +107,7 @@ void Image::initTexelsTest()
 
 void Image::associateZone()
 {	
-	int nbTexels = 100;
+	int nbTexels = texels.size();
 	int nbTexelsAssociatedToZones = 0;
 
 	int texelIndex = 0;
@@ -126,9 +127,9 @@ void Image::associateZone()
 			continue;
 
 		//Attribute a new zone to the current texel
-		cout << "zone counter " << getZoneCounter() << endl;
+		//cout << "zone counter " << getZoneCounter() << endl;
 		currentTexel.setZoneId(getZoneCounter());
-		cout << "getZoneId " << currentTexel.getZoneId() << endl;
+		//cout << "getZoneId " << currentTexel.getZoneId() << endl;
 		incrementZoneCounter();
 		nbTexelsAssociatedToZones++;
 
@@ -170,35 +171,101 @@ Mat Image::getImageOutput()
 	Mat output = Mat(imageInput.rows, imageInput.cols, CV_8UC3, Scalar(255, 255, 255));
 
 	// convert to HSV
-	cvtColor(output, output, CV_RGB2HSV);
+	//cvtColor(output, output, CV_RGB2HSV);
 
 	// fill zones
 	for (unsigned int i = 0; i < texels.size(); i ++)
 	{
 		Texel texel = texels[i];
-		int hue = getHue(texel.getZoneId());
+		float hue = getHue(texel.getZoneId()) * 360;
+
+		//cout << "hue " << hue << endl;
 		int startX = (texel.getId() % nbTexelCol) * texelSize;
 		int startY = (texel.getId() / nbTexelRow) * texelSize;
+		float r,g,b,s,v;
+		s = v = 1;
+
+		HSVtoRGB(&r,&g,&b,hue,s,v);
+
+		//cout << getColorComponent(r) << " ; " << getColorComponent(g) << " ; " <<  getColorComponent(r) <<endl;
+
 		for (int x = startX; x < (startX + texelSize); x ++)
 		{
 			for (int y = startY; y < (startY + texelSize); y ++)
 			{				
-				output.at<cv::Vec3b>(y, x)[0] = hue;
+				/*output.at<cv::Vec3b>(y, x)[0] = hue;
 				output.at<cv::Vec3b>(y, x)[1] = 255;
-				output.at<cv::Vec3b>(y, x)[2] = 255;
+				output.at<cv::Vec3b>(y, x)[2] = 255;*/
+				output.at<cv::Vec3b>(y, x)[0] = getColorComponent(r);
+				output.at<cv::Vec3b>(y, x)[1] = getColorComponent(g);
+				output.at<cv::Vec3b>(y, x)[2] = getColorComponent(b);
+
 			}
 		}
 	}
 
 	// OpenCV sucks to display HSV images
-	cvtColor(output, output, CV_HSV2BGR);
+	//cvtColor(output, output, CV_HSV2BGR);
 
 	return output;
 }
 
-int Image::getHue(int zone)
+float Image::getHue(int zone)
 {
-	return (180 / zoneCounter) * zone;
+	return (float)zone/(float)zoneCounter;//(180 / zoneCounter) * zone;
+}
+int Image::getColorComponent(float component)
+{
+	return (int) (component*255.0);
+}
+void Image::HSVtoRGB( float *r, float *g, float *b, float h, float s, float v )
+{
+	int i;
+	float f, p, q, t;
+	if( s == 0 ) {
+		// achromatic (grey)
+		*r = *g = *b = v;
+		return;
+	}
+	h /= 60;			// sector 0 to 5
+	i = floor( h );
+	f = h - i;			// factorial part of h
+	p = v * ( 1 - s );
+	q = v * ( 1 - s * f );
+	t = v * ( 1 - s * ( 1 - f ) );
+	switch( i ) {
+		case 0:
+			*r = v;
+			*g = t;
+			*b = p;
+			break;
+		case 1:
+			*r = q;
+			*g = v;
+			*b = p;
+			break;
+		case 2:
+			*r = p;
+			*g = v;
+			*b = t;
+			break;
+		case 3:
+			*r = p;
+			*g = q;
+			*b = v;
+			break;
+		case 4:
+			*r = t;
+			*g = p;
+			*b = v;
+			break;
+		default:		// case 5:
+			*r = v;
+			*g = p;
+			*b = q;
+			break;
+	}
+
 }
 
 void Image::incrementZoneCounter()

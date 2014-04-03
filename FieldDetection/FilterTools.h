@@ -34,5 +34,7 @@ public:
 	static double compareChi2(Texel t1, Texel t2);
 
 	static bool isEqual(double a, double b, double epsilon);
+
+	static Mat imageCombination(Mat a, Mat b, float bOpacity);
 };
 

@@ -26,11 +26,14 @@ public:
 	double getDeltaChi2() {return deltaChi2;}
 	void incrementZoneCounter();	
 	void associateZone();
+	float getHue(int zone);
+	static void HSVtoRGB( float *r, float *g, float *b, float h, float s, float v );
+	static int getColorComponent(float component);
 
 private:
 
 	void initTexels();
-	int getHue(int zone);
+	
 
 	// tmp : until initTexels is working
 	void initTexelsTest();
