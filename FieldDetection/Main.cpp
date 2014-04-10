@@ -20,23 +20,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	cout << "zones " << image.getZoneCounter() << endl;
 
-	//for (unsigned int i = 0; i < image.getTexels().size(); i ++)
-	//{
-	//	cout << "t" << i << " " << image.getTexels()[i].getZoneId() << endl;
-	//}
 
-	Mat result = FilterTools::imageCombination(mat,image.getImageOutput(),0.5);
+	Mat outputImage = image.getImageOutput();
+	Mat result = FilterTools::imageCombination(image.getImageInput(),outputImage,0.5);
 	FilesTools::showImage(result);
-	FilesTools::showImage(image.getImageOutput(), "result");
-
-	//FilesTools::showImage(image.getImageOutput());
-
-	// test filters with RGB images
-	//vector<Mat> imagesRGB = FilesTools::getImages("..\\images\\sources\\RGB");
-	//FilesTools::showImages(FilterTools::getRed(imagesRGB), "red");
-	//FilesTools::showImages(FilterTools::getGreen(imagesRGB), "green");
-	//FilesTools::showImages(FilterTools::getBlue(imagesRGB), "blue");
-	//FilesTools::showImages(FilterTools::toGray(imagesRGB), "grey");
+	FilesTools::showImage(outputImage, "result");
 
 	waitKey();
 	return 0;

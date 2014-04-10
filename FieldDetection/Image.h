@@ -48,7 +48,7 @@ private:
 	vector<Texel> texels;
 
 	// tools
-	int nbTexelRow;
-	int nbTexelCol;
+	int nbLines;
+	int nbColumns;
 };
 

@@ -4,12 +4,12 @@
 
 Image::Image(Mat imageInput, int texelSize, double deltaChi2)
 {
-	this->imageInput = imageInput;
+	this->imageInput = FilterTools::trimImageForTexelSize(imageInput,texelSize);
 	this->texelSize = texelSize;
 	this->deltaChi2 = deltaChi2;
 	cv::Size s = this->imageInput.size();
-	this->nbTexelRow = (int)( std::floor(s.height / texelSize));
-	this->nbTexelCol = (int)( std::floor(s.width / texelSize));
+	this->nbLines = (int)( std::floor(s.height / texelSize));
+	this->nbColumns = (int)( std::floor(s.width / texelSize));
 	zoneCounter = 0;
 
 	initTexels();
@@ -27,9 +27,12 @@ void Image::initTexels()
 	cvtColor(imageSubstitute, imageSubstitute, COLOR_RGB2GRAY);
 
 	int id = 0;
-	for( int row = 0 ; row < nbTexelRow ; ++row )
+	int row = 0;
+	int col = 0;
+	for(row = 0 ; row < nbLines ; ++row )
 	{
-		for( int col = 0 ; col < nbTexelCol ; ++col)
+		
+		for(col = 0 ; col < nbColumns ; ++col)
 		{
 			Texel tex(id,texelSize);
 			++id;
@@ -52,13 +55,6 @@ void Image::initTexels()
 			cv::Mat3b hist_image = cv::Mat3b::zeros(hist_height, bins);
 
 			cv::calcHist(&subImg, 1, channels, cv::Mat(), histogram, 1, histSize, ranges, true, false);
-
-			//cout << "initTexels" << endl;
-			//for (int i=0; i<256; i++)
-			//{
-			//	cout << histogram.at<float>(i);
-			//	// do stuff
-			//}
 
 			normalize( histogram, histogram, 0, 1, NORM_MINMAX, -1, Mat() );
 
@@ -127,9 +123,8 @@ void Image::associateZone()
 			continue;
 
 		//Attribute a new zone to the current texel
-		//cout << "zone counter " << getZoneCounter() << endl;
 		currentTexel.setZoneId(getZoneCounter());
-		//cout << "getZoneId " << currentTexel.getZoneId() << endl;
+
 		incrementZoneCounter();
 		nbTexelsAssociatedToZones++;
 
@@ -153,14 +148,6 @@ void Image::associateZone()
 				comparisonTexel.setZoneId(currentTexel.getZoneId()); 
 				nbTexelsAssociatedToZones++;
 			}
-
-
-
-			//if(isEqual(chi2(comparisonTexel), chi2(currentTexel), FilterTools::CHI2_EPSILON))
-			//{
-			//	comparisonTexel.setZoneId(currentTexel.getZoneId()); 
-			//	nbTexelsAssociatedToZones++;
-			//}
 		}
 	}
 }
@@ -174,45 +161,39 @@ Mat Image::getImageOutput()
 	//cvtColor(output, output, CV_RGB2HSV);
 
 	// fill zones
+
 	for (unsigned int i = 0; i < texels.size(); i ++)
 	{
 		Texel texel = texels[i];
 		float hue = getHue(texel.getZoneId()) * 360;
 
-		//cout << "hue " << hue << endl;
-		int startX = (texel.getId() % nbTexelCol) * texelSize;
-		int startY = (texel.getId() / nbTexelRow) * texelSize;
+		int startX = (texel.getId() % nbColumns) * texelSize;
+		int startY = (texel.getId() / nbColumns) * texelSize;
+		
 		float r,g,b,s,v;
 		s = v = 1;
 
 		HSVtoRGB(&r,&g,&b,hue,s,v);
 
-		//cout << getColorComponent(r) << " ; " << getColorComponent(g) << " ; " <<  getColorComponent(r) <<endl;
 
 		for (int x = startX; x < (startX + texelSize); x ++)
 		{
 			for (int y = startY; y < (startY + texelSize); y ++)
 			{				
-				/*output.at<cv::Vec3b>(y, x)[0] = hue;
-				output.at<cv::Vec3b>(y, x)[1] = 255;
-				output.at<cv::Vec3b>(y, x)[2] = 255;*/
+
 				output.at<cv::Vec3b>(y, x)[0] = getColorComponent(r);
 				output.at<cv::Vec3b>(y, x)[1] = getColorComponent(g);
 				output.at<cv::Vec3b>(y, x)[2] = getColorComponent(b);
-
 			}
 		}
 	}
-
-	// OpenCV sucks to display HSV images
-	//cvtColor(output, output, CV_HSV2BGR);
 
 	return output;
 }
 
 float Image::getHue(int zone)
 {
-	return (float)zone/(float)zoneCounter;//(180 / zoneCounter) * zone;
+	return (float)zone/(float)zoneCounter;
 }
 int Image::getColorComponent(float component)
 {
