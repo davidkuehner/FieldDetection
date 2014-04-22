@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "Texel.h"
+#include "Zone.h"
 
 using namespace cv;
+
+Texel::Texel()
+{
+}
 
 Texel::Texel(int id, int size)
 {
@@ -10,6 +15,7 @@ Texel::Texel(int id, int size)
 	this->height = size;
 	this->zoneId = -1;
 	this->histogram = NULL;
+	this->zone = NULL;
 }
 
 Texel::~Texel(void)
@@ -59,11 +65,21 @@ int Texel::getZoneId()
 	return this->zoneId;
 }
 
-void Texel::setHistogram(cv::MatND histogram)
+void Texel::setZone(Zone* zone)
+{
+	this->zone = zone;
+}
+Zone* Texel::getZone()
+{
+	return this->zone;
+}
+
+
+void Texel::setHistogram(cv::Mat histogram)
 {
 	this->histogram = histogram;
 }
-cv::MatND Texel::getHistogram()
+cv::Mat Texel::getHistogram()
 {
 	return this->histogram;
 }

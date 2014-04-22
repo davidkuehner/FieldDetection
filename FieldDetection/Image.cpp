@@ -86,6 +86,9 @@ void Image::associateZone()
 
 		//Attribute a new zone to the current texel
 		currentTexel.setZoneId(getZoneCounter());
+		//For histogram form variant
+		//Zone* newZone = new Zone(getZoneCounter(), currentTexel);
+		//currentTexel.setZone(newZone);
 
 		incrementZoneCounter();
 		nbTexelsAssociatedToZones++;
@@ -108,10 +111,46 @@ void Image::associateZone()
 			if (FilterTools::compareChi2(comparisonTexel, currentTexel) <= getDeltaChi2())
 			{
 				comparisonTexel.setZoneId(currentTexel.getZoneId()); 
+				//For histogram form variant
+				//comparisonTexel.setZone(currentTexel.getZone());
 				nbTexelsAssociatedToZones++;
 			}
 		}
 	}
+}
+
+//For histogram form variant
+Mat Image::getImageOutputHistDependent()
+{
+	// create RGB image
+	Mat output = Mat(imageInput.rows, imageInput.cols, CV_8UC3, Scalar(255, 255, 255));
+
+	// fill zones
+	for (unsigned int i = 0; i < texels.size(); i ++)
+	{
+		Texel texel = texels[i];
+
+		int startX = (texel.getId() % nbColumns) * texelSize;
+		int startY = (texel.getId() / nbColumns) * texelSize;
+		
+		float r,g,b;
+
+		r = texel.getZone()->getRed();
+		g = texel.getZone()->getGreen();
+		b = texel.getZone()->getBlue();
+
+		for (int x = startX; x < (startX + texelSize); x ++)
+		{
+			for (int y = startY; y < (startY + texelSize); y ++)
+			{				
+				output.at<cv::Vec3b>(y, x)[0] = getColorComponent(r);
+				output.at<cv::Vec3b>(y, x)[1] = getColorComponent(g);
+				output.at<cv::Vec3b>(y, x)[2] = getColorComponent(b);
+			}
+		}
+	}
+
+	return output;
 }
 
 Mat Image::getImageOutput()

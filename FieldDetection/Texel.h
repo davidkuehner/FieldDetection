@@ -1,5 +1,6 @@
 #pragma once
 #include "opencv2\opencv.hpp"
+class Zone;
 
 class Texel
 {
@@ -8,10 +9,12 @@ private:
 	int width;
 	int height;
 	int zoneId;
-	cv::MatND histogram;
+	Zone* zone;
+	cv::Mat histogram;
 	const static int NB_GRAY = 256;
 
 public:
+	Texel();
 	Texel(int id, int size);
 	~Texel(void);
 
@@ -28,7 +31,11 @@ public:
 	void setZoneId(int zoneId);
 	int getZoneId();
 
-	void setHistogram(cv::MatND histogram);
-	cv::MatND getHistogram();
+	void setZone(Zone* zone);
+	Zone* getZone();
+
+	void setHistogram(cv::Mat histogram);
+	cv::Mat getHistogram();
+
 };
 

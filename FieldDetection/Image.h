@@ -1,9 +1,9 @@
 #include <list>
 
 #include "stdafx.h"
-#include "opencv2\opencv.hpp"
 #include "Texel.h"
 #include "FilterTools.h"
+#include "Zone.h"
 #include <iostream>
 
 #pragma once
@@ -20,7 +20,9 @@ public:
 	Mat getImageInput() {return imageInput;}
 	// hypothese : imageInput width % texelSize = 0
 	Mat getImageOutput();
+	Mat getImageOutputHistDependent();
 	int getZoneCounter() {return zoneCounter;}
+	Zone getZone();
 	vector<Texel> getTexels() {return texels;}
 	int getTexelSize() {return texelSize;}
 	double getDeltaChi2() {return deltaChi2;}
