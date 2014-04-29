@@ -9,36 +9,24 @@
 
 using namespace cv;
 
-
+const int TEXEL_SIZE = 8;
+const double DELTA_CHI2 = 13.0;
+const double OPACITY = 0.5;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	vector<Mat> sourceImages = FilesTools::getImages("..\\images\\sources");
+	vector<Mat> sourceImages = FilesTools::getImages("..\\images\\input");
 	vector<Mat> imagesOutput;
 	for(int i = 0; i< sourceImages.size() ; i++)
 	{
-		cout << "Traitement image " << i+1 << endl;
 		Mat mat = sourceImages[i];
-		Image image = Image(mat, 8, 13.0);
+		Image image = Image(mat, TEXEL_SIZE, DELTA_CHI2);
 		Mat outputImage = image.getImageOutput();
-		Mat result = FilterTools::imageCombination(image.getImageInput(),outputImage,0.5);
+		Mat result = FilterTools::imageCombination(image.getImageInput(),outputImage,OPACITY);
 		imagesOutput.push_back(result);
 	}
-	FilesTools::saveImages(imagesOutput,"..\\images\\destination");
-	/*FilesTools::showImage(mat);
+	FilesTools::saveImages(imagesOutput,"..\\images\\output");
 
-	Image image = Image(mat, 16, 13.0);
-
-	cout << "zones " << image.getZoneCounter() << endl;
-
-
-	Mat outputImage = image.getImageOutput();
-	Mat result = FilterTools::imageCombination(image.getImageInput(),outputImage,0.5);
-	FilesTools::showImage(result);
-	FilesTools::showImage(outputImage, "result");
-	vector<Mat> images;
-	images.push_back(outputImage);
-	FilesTools::saveImages(images,"..\\images\\destination\\zones");*/
 	waitKey();
 	return 0;
 }

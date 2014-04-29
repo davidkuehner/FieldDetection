@@ -33,10 +33,6 @@ public:
 private:
 
 	void initTexels();
-	
-
-	// tmp : until initTexels is working
-	void initTexelsTest();
 
 	// input
 	Mat imageInput;

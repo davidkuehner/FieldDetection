@@ -84,25 +84,6 @@ vector<Mat> FilterTools::getBlue(vector<Mat> images)
 	return results;
 }
 
-Mat FilterTools::resize(Mat source, int w, int h)
-{
-	// TODO @DKU
-	//Mat result(h,w, DataType<float>::type);
-	//cvResize(source,result);
-	return source;
-}
-
-vector<Mat> FilterTools::resize(vector<Mat> images, int w, int h)
-{
-	vector<Mat> results;
-	for (unsigned int i = 0; i < images.size(); i ++)
-		results.push_back(resize(images[i], w, h));
-
-	return results;
-}
-
-
-
 bool FilterTools::isEqual(double a, double b, double epsilon)
 {
 	return abs(a-b) <= epsilon;
@@ -120,15 +101,13 @@ Mat FilterTools::trimImageForTexelSize(Mat source, int texelSize)
 double FilterTools::compareChi2(Texel t1, Texel t2)
 {
 	double chi2 = compareHist(t1.getHistogram(), t2.getHistogram(), CV_COMP_CHISQR);
-	//cout << "chi2 " << chi2 << endl;
-
 	return chi2;
 }
 
 Mat FilterTools::imageCombination(Mat a, Mat b, float bOpacity)
 {
 	Mat dest;
-	float aOpacity = (1.0 - bOpacity);
+	float aOpacity = ((float)1.0 - bOpacity);
 	addWeighted(a,bOpacity,b,aOpacity,0.0,dest);
 	return dest;
 }

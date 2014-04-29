@@ -27,9 +27,6 @@ public:
 	static Mat getBlue(Mat source);
 	static vector<Mat> getBlue(vector<Mat> images);
 
-	static Mat resize(Mat source, int w, int h);
-	static vector<Mat> resize(vector<Mat> images, int w, int h);
-
 	static Mat trimImageForTexelSize(Mat source, int texelSize);
 	static double compareChi2(Texel t1, Texel t2);
 

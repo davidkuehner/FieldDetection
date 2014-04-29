@@ -14,7 +14,6 @@ Image::Image(Mat imageInput, int texelSize, double deltaChi2)
 
 	initTexels();
 	associateZone();
-	//initTexelsTest();
 }
 
 Image::~Image(void)
@@ -62,43 +61,6 @@ void Image::initTexels()
 			texels.push_back(tex);
 		}
 	}
-}
-
-void Image::initTexelsTest()
-{
-	int size = 128;
-
-	Texel t0 = Texel(0, 128);
-	t0.setZoneId(0);
-	texels.push_back(t0);
-	Texel t1 = Texel(1, 128);
-	t1.setZoneId(0);
-	texels.push_back(t1);
-	Texel t2 = Texel(2, 128);
-	t2.setZoneId(1);
-	texels.push_back(t2);
-	Texel t3 = Texel(3, 128);
-	t3.setZoneId(2);
-	texels.push_back(t3);
-
-	Texel t4 = Texel(4, 128);
-	t4.setZoneId(3);
-	texels.push_back(t4);
-	Texel t5 = Texel(5, 128);
-	t5.setZoneId(1);
-	texels.push_back(t5);
-	Texel t6 = Texel(6, 128);
-	t6.setZoneId(2);
-	texels.push_back(t6);
-	Texel t7 = Texel(7, 128);
-	t7.setZoneId(0);
-	texels.push_back(t7);
-
-	Texel t15 = Texel(15, 128);
-	t15.setZoneId(2);
-	texels.push_back(t15);
-
-	zoneCounter = 4;
 }
 
 void Image::associateZone()
@@ -157,11 +119,7 @@ Mat Image::getImageOutput()
 	// create RGB image
 	Mat output = Mat(imageInput.rows, imageInput.cols, CV_8UC3, Scalar(255, 255, 255));
 
-	// convert to HSV
-	//cvtColor(output, output, CV_RGB2HSV);
-
 	// fill zones
-
 	for (unsigned int i = 0; i < texels.size(); i ++)
 	{
 		Texel texel = texels[i];
