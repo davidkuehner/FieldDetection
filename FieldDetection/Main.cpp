@@ -15,17 +15,22 @@ const double OPACITY = 0.5;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	vector<Mat> sourceImages = FilesTools::getImages("..\\images\\input");
+	cout << "Folder : 'images\\input' must exist" << endl;
+	cout << "Folder : 'images\\output' must exist" << endl;
+	vector<Mat> sourceImages = FilesTools::getImages("images\\input");
 	vector<Mat> imagesOutput;
 	for(int i = 0; i< sourceImages.size() ; i++)
 	{
+		cout << "Processing image " << i + 1 << endl;
 		Mat mat = sourceImages[i];
 		Image image = Image(mat, TEXEL_SIZE, DELTA_CHI2);
 		Mat outputImage = image.getImageOutput();
 		Mat result = FilterTools::imageCombination(image.getImageInput(),outputImage,OPACITY);
 		imagesOutput.push_back(result);
 	}
-	FilesTools::saveImages(imagesOutput,"..\\images\\output");
+	FilesTools::saveImages(imagesOutput,"images\\output");
+
+	cout << "Finished" << endl;
 
 	waitKey();
 	return 0;
