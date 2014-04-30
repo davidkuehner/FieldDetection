@@ -17,7 +17,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	cout << "Folder : 'images\\input' must exist" << endl;
 	cout << "Folder : 'images\\output' must exist" << endl;
-	vector<Mat> sourceImages = FilesTools::getImages("images\\input");
+	vector<Mat> sourceImages = FilesTools::getImages("..\\images\\input");
 	vector<Mat> imagesOutput;
 	for(int i = 0; i< sourceImages.size() ; i++)
 	{
@@ -28,7 +28,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		Mat result = FilterTools::imageCombination(image.getImageInput(),outputImage,OPACITY);
 		imagesOutput.push_back(result);
 	}
-	FilesTools::saveImages(imagesOutput,"images\\output");
+	FilesTools::saveImages(imagesOutput,"..\\images\\output");
 
 	cout << "Finished" << endl;
 
